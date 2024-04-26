@@ -7,6 +7,30 @@
 
 int results[N];
 
+void SendData(int data[], int n) {
+  byte checksum, LSB, MSB;
+  // Serial.write(byte(0)); 
+  checksum = 0;
+  LSB = lowByte(n) | 0x80; // send low seven bits, with one in high bit to ensure a non-zero byte
+  MSB = highByte(n << 1) | 0x80; // send bits 8 to 14, with one in high bit to ensure a non-zero byte
+  // Serial.write(LSB); 
+  checksum += LSB;
+  // Serial.write(MSB); 
+  checksum += MSB;
+  for (int i = 0; i < n; i++) {
+    LSB = lowByte(data[i]) | 0x80; // send low seven bits, with one in high bit to ensure a non-zero byte
+    MSB = highByte(data[i] << 1) | 0x80; // send bits 8 to 14, with one in high bit to ensure a non-zero byte
+    // Serial.write(LSB); 
+    checksum += LSB;
+    // Serial.write(MSB); 
+    checksum += MSB;
+  }
+  char decChecksum[4]; // Buffer to store decimal checksum (up to 3 digits + null terminator)
+  sprintf(decChecksum, "%d", checksum); // Convert checksum to decimal
+  Serial.write(decChecksum); // Send decimal checksum
+   Serial.write('\n'); // New line
+}
+
 void setup(){
   TCCR1A = 0b10000010;      //-Set up frequency generator
   TCCR1B = 0b00011001;      //-+
@@ -44,18 +68,3 @@ void loop(){
   TOG(PORTB, 0);           //-Toggle pin 8 after each sweep (good for scope)
 }
 
-void SendData(int data[], int n) {
-  byte checksum, LSB, MSB;
-  Serial.write(byte(0)); checksum = 0;
-  LSB = lowByte(n) | 0x80; // send low seven bits, with one in high bit to ensure a non-zero byte
-  MSB = highByte(n << 1) | 0x80; // send bits 8 to 14, with one in high bit to ensure a non-zero byte
-  Serial.write(LSB); checksum += LSB;
-  Serial.write(MSB); checksum += MSB;
-  for (int i = 0; i < n; i++) {
-    LSB = lowByte(data[i]) | 0x80; // send low seven bits, with one in high bit to ensure a non-zero byte
-    MSB = highByte(data[i] << 1) | 0x80; // send bits 8 to 14, with one in high bit to ensure a non-zero byte
-    Serial.write(LSB); checksum += LSB;
-    Serial.write(MSB); checksum += MSB;
-  }
-  Serial.write(checksum | 0x80); // seven bit checksum, with one in the high bit to ensure a non-zero byte
-}
