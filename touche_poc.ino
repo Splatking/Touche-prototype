@@ -76,7 +76,7 @@ void loop(){
 //    results[d] = results[d] * alpha + v * (1-alpha);
 //    if (results[d] > maxVal){
 //      maxVal = results[d];
-//      maxPos = d;
+//   c:\DeFontysMap\2324\Semester 2\Delta\TouchéBastiaanClone\delta-bastiaan\semester_3\Ellie\touche_poc\Touche_Test2.0.ino   maxPos = d;
 //    }
 
     //filter results
@@ -86,7 +86,7 @@ void loop(){
 //    Serial.print(":");
 //    Serial.println(results[d]);
 
-//    Serial.print(d);
+//	  Serial.print(d);
 //    Serial.print (":");
 //    Serial.println(analogRead(0), DEC);
     
